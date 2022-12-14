@@ -3,7 +3,6 @@ package database;
 import org.testng.annotations.Test;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public class DBTest {
     private DBConnection dbConnection = new DBConnection();
@@ -11,12 +10,19 @@ public class DBTest {
     @Test
     private void dataBaseTest() {
         dbConnection.connect();
-        try {
-            ResultSet resultSet = dbConnection.selectFrom("student");
-            DBConnection.writeResultSet(resultSet);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        ResultSet resultSet = dbConnection.selectStudentInfoWithCityName();
+        dbConnection.writeResultSet(resultSet);
+        dbConnection.close();
+    }
+
+    @Test(testName = "Add new student record")
+    private void addStudentTest() {
+        String studentName = "Pavel";
+        String cityName = "Omsk";
+        dbConnection.connect();
+        dbConnection.addNewStudent(studentName, cityName);
+        ResultSet resultSet = dbConnection.selectStudentInfoWithCityName();
+        dbConnection.writeResultSet(resultSet);
         dbConnection.close();
     }
 }
